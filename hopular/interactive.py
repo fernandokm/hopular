@@ -203,7 +203,7 @@ def console_entry() -> None:
                 lookup_steps=args.lookup_steps,
                 lookup_ratio=args.lookup_ratio,
                 warmup_ratio=args.warmup_ratio,
-                num_steps_per_cycle=10000,
+                num_steps_per_cycle=args.num_epochs,
                 cold_restart=args.cold_restart,
                 asynchronous_weights=not args.synchronous_weights
             )
