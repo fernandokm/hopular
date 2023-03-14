@@ -428,7 +428,8 @@ class Hopular(LightningModule):
         field_names=[
             r'loss_feature', r'loss_target',
             r'accuracy_feature', r'accuracy_target',
-            r'feature_count', r'target_count'
+            r'feature_count', r'target_count',
+            r'extra_output',
         ]
     )
 
@@ -756,7 +757,8 @@ class Hopular(LightningModule):
             accuracy_feature=accuracy_feature,
             accuracy_target=accuracy_target,
             feature_count=feature_count,
-            target_count=target_count
+            target_count=target_count,
+            extra_output={},
         )
 
     def reset_parameters(self) -> None:
@@ -879,7 +881,7 @@ class Hopular(LightningModule):
             r'learning_rate': self.lr_schedulers().get_lr()[0], r'step': float(self.current_epoch)
         }, on_step=False, on_epoch=True)
 
-        return {r'loss': loss}
+        return {r'loss': loss} | performance_result.extra_output
 
     def validation_step(self,
                         batch: Tuple[torch.Tensor, ...],
@@ -924,7 +926,7 @@ class Hopular(LightningModule):
             r'hp_metric/val': hp_metric, r'step': float(self.current_epoch)
         }, on_step=False, on_epoch=True)
 
-        return {r'loss': loss}
+        return {r'loss': loss} | performance_result.extra_output
 
     def test_step(self,
                   batch: Tuple[torch.Tensor, ...],
@@ -962,7 +964,7 @@ class Hopular(LightningModule):
                 r'accuracy_target/test': float(accuracy), r'step': float(self.current_epoch)
             }, on_step=False, on_epoch=True)
 
-        return {r'loss': loss}
+        return {r'loss': loss} | performance_result.extra_output
 
     def on_train_epoch_end(self, **kwargs) -> None:
         """
